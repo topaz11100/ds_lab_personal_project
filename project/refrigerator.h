@@ -1,25 +1,25 @@
 #pragma once
 #include "base.h"
 #include "food.h"
-
+/*
 class refrigerator {
 public:
 	refrigerator(int length) : length(length) {}
 	void push(const food& f) {
-		expiry_queue.push(f);
+		expiry_set.insert(f);
 	}
 	food pop() {
-		food f = expiry_queue.top();
-		expiry_queue.pop();
+		food f = expiry_set.();
+		expiry_set.pop();
 		return f;
 	}
 	int size() {
-		return expiry_queue.size();
+		return expiry_set.size();
 	}
 	bool empty() {
-		return expiry_queue.empty();
+		return expiry_set.empty();
 	}
 private:
-	priority_queue<food> expiry_queue;
+	multiset<food> expiry_set;
 	int length;
-};
+};*/

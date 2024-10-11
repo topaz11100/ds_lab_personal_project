@@ -5,14 +5,19 @@
 class food{
 public:
 
-	food(string name, int expiry) : name{ name }, expiry{ expiry } {}
+	food(string name, int e) : name{ name } {
+		expiry = new int{ e };
+	}
+	~food() {
+		delete expiry;
+	}
 
 	string get_name() const { return name; }
-	int get_expiry() const { return expiry; }
+	int get_expiry() const { return *expiry; }
 
 public:
 	string name;
-	int expiry;
+	int* expiry;
 };
 
 bool operator <(const food& a, const food& b) {

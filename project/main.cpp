@@ -17,9 +17,12 @@ int main() {
 	up(r, a, "date", 4);
 	up(r, a, "elderberry", 5);
 	up(r, a, "fig", 6);
-	
-	multiset<food>::iterator it = r.begin();
-	(*it).expiry += 1;
+
+	for (auto& b : r)
+		*(b.expiry) += 1;
+
+	for (auto& b : r)
+		cout << b << endl;
 
 	return 0;
 }

@@ -19,6 +19,9 @@
 #include <set>
 #include <map>
 
+//메모리 관리
+#include <memory>
+
 //시간 측정
 #include <chrono>
 

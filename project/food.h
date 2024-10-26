@@ -5,27 +5,30 @@
 class food{
 public:
 
-	food(string name, int e) : name{ name } {
-		expiry = new int{ e };
-	}
-	~food() {
-		delete expiry;
-	}
+	food(const string& name, const int& expiry);
 
-	string get_name() const { return name; }
+	void set_expiry(const int& expiry) const { *(this->expiry) = expiry; }
+
+	const string& get_name() const { return name; }
 	int get_expiry() const { return *expiry; }
-
-public:
+	
+private:
 	string name;
-	int* expiry;
+	shared_ptr<int> expiry;
 };
+
+food::food(const string& name, const int& expiry)
+{
+	this->name = name;
+	this->expiry = make_shared<int>(expiry);
+}
 
 bool operator <(const food& a, const food& b) {
 	return a.get_expiry() < b.get_expiry();
 }
 
 ostream& operator <<(ostream& os, const food& f) {
-	os << f.get_name() << " " << f.get_expiry();
+	os << "Name : " << f.get_name() << " Expiry : " << f.get_expiry();
 	return os;
 }
 

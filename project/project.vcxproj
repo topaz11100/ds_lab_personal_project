@@ -129,7 +129,9 @@
   <ItemGroup>
     <ClCompile Include="file_manage.cpp" />
     <ClCompile Include="file_manage.h" />
+    <ClCompile Include="food.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="refrigerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h" />

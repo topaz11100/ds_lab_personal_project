@@ -2,12 +2,12 @@
 
 #include "base.h"
 
-class food{
+class food
+{
 public:
+	food(const string& n, const int& e);
 
-	food(const string& name, const int& expiry);
-
-	void set_expiry(const int& expiry) const { *(this->expiry) = expiry; }
+	void set_expiry(const int& new_expiry) const { *expiry = new_expiry; }
 
 	const string& get_name() const { return name; }
 	int get_expiry() const { return *expiry; }
@@ -16,20 +16,17 @@ private:
 	string name;
 	shared_ptr<int> expiry;
 };
+bool operator <(const food& a, const food& b);
+ostream& operator <<(ostream& os, const food& f);
 
-food::food(const string& name, const int& expiry)
+struct food_bin
 {
-	this->name = name;
-	this->expiry = make_shared<int>(expiry);
-}
+	food_bin(const int& expiry, const int& name_length, const string& name);
+	int expiry;
+	int name_length;
+	string name;
+};
 
-bool operator <(const food& a, const food& b) {
-	return a.get_expiry() < b.get_expiry();
-}
-
-ostream& operator <<(ostream& os, const food& f) {
-	os << "Name : " << f.get_name() << " Expiry : " << f.get_expiry();
-	return os;
-}
-
+food_bin food_to_bin(const food& f);
+food bin_to_food(const food_bin& fb);
 

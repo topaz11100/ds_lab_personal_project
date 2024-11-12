@@ -25,6 +25,11 @@
 
 //시간 측정
 #include <chrono>
+#include <ctime>
+
+//멀티스레드
+#include <thread>
+#include <future>
 
 //std 사용
 using namespace std;

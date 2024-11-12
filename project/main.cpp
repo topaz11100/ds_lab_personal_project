@@ -4,7 +4,6 @@
 #include "file_manage.h"
 
 int main() {
-	
 	return 0;
 }
 

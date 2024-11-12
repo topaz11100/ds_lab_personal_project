@@ -132,6 +132,7 @@
     <ClCompile Include="food.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="refrigerator.cpp" />
+    <ClCompile Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h" />

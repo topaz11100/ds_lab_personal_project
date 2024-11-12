@@ -2,7 +2,8 @@
 #include "base.h"
 #include "food.h"
 
-class refrigerator {
+class refrigerator
+{
 public:
 	refrigerator() :length(0) {}
 
@@ -10,6 +11,7 @@ public:
 	food pop();
 
 	void minus_expiry();
+	void over_expiry(vector<int>& v);
 
 	const food& operator[](const int& index);
 	int get_length() const { return length; }

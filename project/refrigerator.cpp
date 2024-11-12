@@ -22,6 +22,18 @@ void refrigerator::minus_expiry()
 	}
 }
 
+void refrigerator::over_expiry(vector<int>& v)
+{
+	v.clear();
+	for (int i = 0; i < length; i += 1)
+	{
+		if ((*this)[i].get_expiry() <= 0)
+		{
+			v.push_back(i);
+		}
+	}
+}
+
 const food& refrigerator::operator[](const int& index)
 {
 	auto it = expiry_set.begin();

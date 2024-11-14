@@ -6,6 +6,11 @@ void input_to_vector(istream& in, vector<string>& v)
 	getline(in, temp);
 	stringstream ss{ temp };
 
+	if (temp.empty())
+	{
+		return; // 아무 것도 하지 않고 바로 리턴
+	}
+
 	for (string word; ss >> word;)
 	{
 		v.push_back(word);

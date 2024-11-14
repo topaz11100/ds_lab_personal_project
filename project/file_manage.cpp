@@ -17,15 +17,15 @@ void input_to_vector(istream& in, vector<string>& v)
 	}
 }
 
-string get_recipe(const string& key)
+string get_recipe(const string& key1, const string& key2)
 {
-	ifstream ifs{ recipe_path + key + recipe_extension };
+	ifstream ifs{ recipe_path + key1 + "/" + key2 + recipe_extension};
 	if (!ifs.is_open())
 	{
 		throw runtime_error("recipe file open error");
 	}
 
-	string result = key + " recipe\n";
+	string result = key1 + " " + key2 + " recipe\n";
 
 	string temp = "";
 	while (getline(ifs, temp))
@@ -35,9 +35,16 @@ string get_recipe(const string& key)
 	return result;
 }
 
-void set_recipe_use_cin(const string& key)
+void set_recipe_use_cin()
 {
-	ofstream ofs{ recipe_path + key + recipe_extension };
+	vector<string> input_temp;
+	cout << "주재료, 레시피 이름 입력\n(주재료 이름) (레시피 이름)\n";
+	input_to_vector(cin, input_temp);
+
+	filesystem::path p = recipe_path + input_temp[0];
+	filesystem::create_directories(p);
+
+	ofstream ofs{ recipe_path + input_temp[0] + "/" + input_temp[1] + recipe_extension};
 	if (!ofs.is_open())
 	{
 		throw runtime_error("recipe file open error");

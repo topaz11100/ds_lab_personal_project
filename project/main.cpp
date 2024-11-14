@@ -8,12 +8,10 @@ int main() {
 	
 	for (int i = 0; i < 5; i += 1)
 	{
-		vector<string> v;
-		cout << "음식 레시피 설정" << endl;
-		cout << "주재로 레시피 이름 입력" << endl;
-		input_to_vector(cin, v);
-		r.push(get_food(v[0]));
-		r.print();
+		vector<string> input;
+		cout << "가져올 레시피 입력\n주재료 레시피 로 입력" << endl;
+		input_to_vector(cin, input);
+		cout << get_recipe(input[0], input[1]) << endl << endl;
 	}
 
 	return 0;

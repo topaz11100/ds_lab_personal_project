@@ -5,6 +5,9 @@
 #include <fstream>
 #include <sstream>
 
+//파일시스템
+#include <filesystem>
+
 //C호환 함수, 편의성 함수
 #include <utility>
 #include <stdexcept>

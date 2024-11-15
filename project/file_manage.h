@@ -9,6 +9,8 @@ const string recipe_extension = ".txt";
 
 void input_to_vector(istream& in, vector<string>& v);
 
+string recommend_recipe(const string& key);
+
 string get_recipe(const string& key1, const string& key2);
 void set_recipe_use_cin();
 

@@ -5,7 +5,7 @@
 class refrigerator
 {
 public:
-	refrigerator() :length(0) {}
+	refrigerator() : length(0) {}
 
 	void push(const food& f);
 	food pop(const string& name);

@@ -17,6 +17,19 @@ void input_to_vector(istream& in, vector<string>& v)
 	}
 }
 
+string recommend_recipe(const string& key)
+{
+	filesystem::path p = recipe_path + key;
+	if (!filesystem::exists(p)) return "No Recipe";
+
+	auto fp = filesystem::directory_iterator(p);
+	int fd = rand() % distance(fp, filesystem::directory_iterator{});
+	
+	advance(fp, fd);
+
+	return get_recipe(key, fp->path().filename().string());
+}
+
 string get_recipe(const string& key1, const string& key2)
 {
 	ifstream ifs{ recipe_path + key1 + "/" + key2 + recipe_extension};

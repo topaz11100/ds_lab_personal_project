@@ -33,6 +33,7 @@
 //멀티스레드
 #include <thread>
 #include <future>
+#include <atomic>
 
 //std 사용
 using namespace std;

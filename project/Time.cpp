@@ -28,23 +28,26 @@ void second_work(refrigerator& r)
 	{
 		if (second_condition.load())
 		{
+			bool alert_con = false, remin_con = false;
 			{
 				lock_guard<mutex> lock1(refri_mtx);
 				lock_guard<mutex> lock2(over_set_mtx);
+
 				r.minus_expiry();
 
-				if (r.get_length() != 0 && r[0].get_expiry() < reminder_time)
-				{
-					reminder.store(true);
-				}
-
 				r.over_expiry(over_set);
-				if (over_set.size() > 0)
-				{
-					alert.store(true);
-				}
+				alert_con = over_set.size() > 0;
+
+				//remin_con = r.get_length() != 0 && r[0].get_expiry() == reminder_time;
 			}
-			
+			if (alert_con)
+			{
+				alert.store(true);
+			}
+			//if (remin_con)
+			{
+				//reminder.store(true);
+			}
 			second_condition.store(false);
 		}
 	}
@@ -82,6 +85,8 @@ void alert_work(refrigerator& r)
 
 //한번만 알리고 끝내게 고치기
 
+/*
+
 void print_expiry_reminder(refrigerator& r)
 {
 	cerr << "유통기한 임박\n음식 정보\n";
@@ -102,5 +107,5 @@ void reminder_work(refrigerator& r)
 		}
 		reminder.store(false);
 	}
-}
+}*/
 

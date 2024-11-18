@@ -3,8 +3,6 @@
 #include "base.h"
 #include "refrigerator.h"
 
-
-
 void flow_clock();
 
 void second_work(refrigerator& r);

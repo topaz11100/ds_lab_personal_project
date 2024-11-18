@@ -2,6 +2,8 @@
 #include "base.h"
 #include "food.h"
 
+//멤버에 뮤텍스 넣어서 동기화메서드로 만들것
+
 class refrigerator
 {
 public:

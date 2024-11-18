@@ -2,6 +2,7 @@
 
 void input_to_vector(istream& in, vector<string>& v)
 {
+	v.clear();
 	string temp;
 	getline(in, temp);
 	stringstream ss{ temp };

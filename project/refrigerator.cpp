@@ -18,6 +18,7 @@ food refrigerator::pop(const string& name)
 		{
 			food result{ *it };
 			expiry_set.erase(it);
+			length -= 1;
 			return result;
 		}
 	}
@@ -30,6 +31,7 @@ food refrigerator::pop(const int& index)
 	advance(it, index);
 	food result{ *it };
 	expiry_set.erase(it);
+	length -= 1;
 	return result;
 }
 

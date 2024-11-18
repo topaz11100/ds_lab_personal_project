@@ -3,8 +3,12 @@
 #include "base.h"
 #include "refrigerator.h"
 
-const int expiry_alarm = 10;
 
-void alert(refrigerator& r);
+
+void flow_clock();
 
 void second_work(refrigerator& r);
+
+void alert_work(refrigerator& r);
+
+void reminder_work(refrigerator& r);

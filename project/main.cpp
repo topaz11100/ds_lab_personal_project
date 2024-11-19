@@ -1,8 +1,4 @@
-#include "base.h"
-#include "food.h"
-#include "refrigerator.h"
-#include "file_manage.h"
-#include "Time.h"
+#include "ui.h"
 
 int main() {
 	
@@ -13,12 +9,21 @@ int main() {
 	thread reminder_work_t{ reminder_work, ref(r) };
 	thread alert_work_t{ alert_work, ref(r) };
 
-	vector<string> f;
+	vector<string> menu;
 	while (true)
 	{
-		input_to_vector(cin, f);
-		r.push(get_food(f[0]));
-		r.print();
+		
+		input_to_vector(cin, menu);
+		if (menu[0] == "end")
+		{
+			program_off();
+			break;
+		}
+		else
+		{
+			r.push(get_food(menu[0]));
+			r.print();
+		}
 	}
 
 	clock_t.join();

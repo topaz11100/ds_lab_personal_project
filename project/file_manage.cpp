@@ -1,20 +1,10 @@
 #include "file_manage.h"
 
-void input_to_vector(istream& in, vector<string>& v)
+void save_path_ls(vector<string> p, string path)
 {
-	v.clear();
-	string temp;
-	getline(in, temp);
-	stringstream ss{ temp };
-
-	if (temp.empty())
+	for (const auto& entry : filesystem::directory_iterator(path))
 	{
-		return; // 아무 것도 하지 않고 바로 리턴
-	}
-
-	for (string word; ss >> word;)
-	{
-		v.push_back(word);
+		p.push_back(entry.path().string());
 	}
 }
 

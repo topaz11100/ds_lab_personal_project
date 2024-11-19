@@ -138,12 +138,14 @@
     <ClCompile Include="refrigerator.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Time.h" />
+    <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h" />
     <ClInclude Include="food.h" />
     <ClInclude Include="recipe.h" />
     <ClInclude Include="refrigerator.h" />
+    <ClInclude Include="ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

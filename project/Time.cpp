@@ -7,9 +7,11 @@ bool second_condition = false;
 bool alert = false;
 bool reminder = false;
 
+bool off = false;
+
 void flow_clock()
 {
-	while (true)
+	while (!off)
 	{
 		this_thread::sleep_for(chrono::seconds(1));
 		second_condition = true;
@@ -23,6 +25,8 @@ void second_work(refrigerator& r)
 	{
 		unique_lock<std::mutex> lock(cv_mtx);
 		cv.wait(lock, [] { return second_condition; });
+
+		if (off) return;
 
 		r.minus_expiry();
 
@@ -48,6 +52,8 @@ void alert_work(refrigerator& r)
 		unique_lock<std::mutex> lock(cv_mtx);
 		cv.wait(lock, [] { return alert; });
 
+		if (off) return;
+
 		print_over_expiry_alert(r);
 		
 		alert = false;
@@ -67,6 +73,8 @@ void reminder_work(refrigerator& r)
 	{
 		unique_lock<std::mutex> lock(cv_mtx);
 		cv.wait(lock, [] { return reminder; });
+
+		if (off) return;
 
 		print_expiry_reminder(r);
 

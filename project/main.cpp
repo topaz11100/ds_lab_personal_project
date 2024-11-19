@@ -8,14 +8,12 @@ int main() {
 	
 	refrigerator r;
 
-	thread clock{ flow_clock };
-	thread refri_s_work{ second_work , ref(r) };
-	thread alert_t{ alert_work , ref(r) };
-	thread reminder_t{ reminder_work , ref(r) };
+	thread clock_t{ flow_clock };
+	thread second_work_t{ second_work, ref(r) };
+	thread reminder_work_t{ reminder_work, ref(r) };
+	thread alert_work_t{ alert_work, ref(r) };
 
 	vector<string> f;
-
-	
 	while (true)
 	{
 		input_to_vector(cin, f);
@@ -23,11 +21,10 @@ int main() {
 		r.print();
 	}
 
-
-	alert_t.join();
-	reminder_t.join();
-	refri_s_work.join();
-	clock.join();
+	clock_t.join();
+	second_work_t.join();
+	reminder_work_t.join();
+	alert_work_t.join();
 
 	return 0;
 }

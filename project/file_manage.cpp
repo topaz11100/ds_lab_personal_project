@@ -109,7 +109,7 @@ void set_food(const food& f, const string& key)
 	{
 		throw runtime_error("food file open error");
 	}
-	food_bin fb = food_to_bin(f);
+	food_bin fb{ food_to_bin(f) };
 	ofs.write(reinterpret_cast<const char*>(&fb.expiry), sizeof(int));
 	ofs.write(reinterpret_cast<const char*>(&fb.name_length), sizeof(int));
 	ofs.write(reinterpret_cast<const char*>(fb.name.c_str()), fb.name_length);

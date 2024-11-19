@@ -2,21 +2,20 @@
 #include "base.h"
 #include "food.h"
 
-//멤버에 뮤텍스 넣어서 동기화메서드로 만들것
-
 class refrigerator
 {
 public:
-	refrigerator() : length(0) {}
+	refrigerator() {}
 
 	void push(const food& f);
+
 	food pop(const string& name);
-	food pop(const int& index);
+	food pop(int index);
 
 	void minus_expiry();
 
-	const food& operator[](const int& index);
-	int get_length() const { return length; }
+	const food& operator[](int index);
+	int length() const { return expiry_set.size(); }
 
 	void print();
 
@@ -26,15 +25,14 @@ public:
 	food pop_alert_set();
 	food pop_remin_set();
 
-	static const int REMIN = 5;
-
 private:
 	multiset<food> expiry_set;
-	queue<food> remin_set;
 	queue<food> alert_set;
-	int length;
+	queue<const food*> remin_set;
 
 	mutex mtx;
+
+	multiset<food>::iterator index_it(int index);
 };
 
 

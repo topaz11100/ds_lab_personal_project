@@ -3,7 +3,28 @@
 food::food(const string& n, const int& e)
 {
 	name = n;
-	expiry = make_shared<int>(e);
+	expiry = new int{ e };
+	remin_time = min(e / 2, remin_thre);
+}
+
+food::food(const food& f)
+{
+	name = f.name;
+	expiry = new int{ f.get_expiry() };
+	remin_time = f.remin_expiry();
+}
+
+food& food::operator=(const food& f)
+{
+	name = f.name;
+	*expiry = f.get_expiry();
+	remin_time = f.remin_expiry();
+	return *this;
+}
+
+food::~food()
+{
+	delete expiry;
 }
 
 bool operator <(const food& a, const food& b)
@@ -13,23 +34,20 @@ bool operator <(const food& a, const food& b)
 
 ostream& operator <<(ostream& os, const food& f)
 {
-	os << "Name:" << f.get_name() << " Expiry:" << f.get_expiry();
+	os << "이름 : " << f.get_name() << " 기한 : " << f.get_expiry();
 	return os;
 }
 
-food_bin::food_bin(const int& expiry, const int& name_length, const string& name)
+food_bin::food_bin(const food& f)
 {
-	this->expiry = expiry;
-	this->name_length = name_length;
-	this->name = name;
+	this->expiry = f.get_expiry();
+	this->name = f.get_name();
+	this->name_length = (this->name).size();
 }
 
 food_bin food_to_bin(const food& f)
 {
-	int expiry = f.get_expiry();
-	string name = f.get_name();
-	int name_length = name.size();
-	return food_bin{ expiry, name_length, name };
+	return food_bin{ f };
 }
 food bin_to_food(const food_bin& fb)
 {

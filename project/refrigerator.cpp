@@ -1,92 +1,95 @@
 #include "refrigerator.h"
 
+multiset<food>::iterator refrigerator::index_it(int index)
+{
+	auto result = expiry_set.begin();
+	advance(result, index);
+	return result;
+}
 
 void refrigerator::push(const food& f)
 {
 	lock_guard<mutex> lock(mtx);
+
 	expiry_set.insert(f);
-	length += 1;
 }
 
 food refrigerator::pop(const string& name)
 {
 	lock_guard<mutex> lock(mtx);
-	for (auto it = expiry_set.begin(); it != expiry_set.end(); ++it)
+
+	for (auto& f : expiry_set)
 	{
-		if (it->get_name() == name)
+		if (f.get_name() == name)
 		{
-			food result{ *it };
-			expiry_set.erase(it);
-			length -= 1;
-			return result;
+			return f;
 		}
 	}
 }
 
-food refrigerator::pop(const int& index)
+food refrigerator::pop(int index)
 {
 	lock_guard<mutex> lock(mtx);
-	auto it = expiry_set.begin();
-	advance(it, index);
+
+	auto it = index_it(index);
 	food result{ *it };
 	expiry_set.erase(it);
-	length -= 1;
 	return result;
 }
 
 void refrigerator::minus_expiry()
 {
 	lock_guard<mutex> lock(mtx);
+
 	int del_count = 0;
 
 	for (auto& f : expiry_set)
 	{
-		int expiry = f.get_expiry();
-		f.set_expiry(expiry - 1);
+		int expiry = f.get_expiry() - 1;
+		f.set_expiry(expiry);
 
-		if (expiry == 0)
+		if (expiry == f.remin_expiry())
+		{
+			remin_set.push(&f);
+		}
+		else if (expiry <= 0)
 		{
 			alert_set.push(f);
 			del_count += 1;
-		}
-		else if (expiry == REMIN)
-		{
-			remin_set.push(f);
 		}
 	}
 
 	for (int i = 0; i < del_count; i += 1)
 	{
 		expiry_set.erase(expiry_set.begin());
-		length -= 1;
 	}
 }
 
-const food& refrigerator::operator[](const int& index)
+const food& refrigerator::operator[](int index)
 {
 	lock_guard<mutex> lock(mtx);
-	auto it = expiry_set.begin();
-	advance(it, index);
+
+	auto it = index_it(index);
 	return *it;
 }
 
 void refrigerator::print()
 {
 	lock_guard<mutex> lock(mtx);
-	cout << endl << "refrigerator status" << endl;
-	cout << "has " << length << " foods" << endl;
-	cout << "food list" << endl;
-	for (const food& f : expiry_set)
+
+	cout << "냉장고 상태\n";
+	cout << length() << " 개 음식이 있습니다\n";
+	for (auto& f : expiry_set)
 	{
-		cout << f << endl;
+		cout << f << '\n';
 	}
-	cout << endl;
 }
 
 food refrigerator::pop_alert_set()
 {
 	lock_guard<mutex> lock(mtx);
-	food result = alert_set.front();
+
+	food result{ alert_set.front() };
 	alert_set.pop();
 	return result;
 }
@@ -94,7 +97,8 @@ food refrigerator::pop_alert_set()
 food refrigerator::pop_remin_set()
 {
 	lock_guard<mutex> lock(mtx);
-	food result = remin_set.front();
+
+	food result{ *(remin_set.front()) };
 	remin_set.pop();
 	return result;
 }

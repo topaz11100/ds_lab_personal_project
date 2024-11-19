@@ -22,6 +22,7 @@
 #include <set>
 #include <map>
 #include <unordered_map>
+#include <queue>
 
 //메모리 관리
 #include <memory>
@@ -34,6 +35,7 @@
 #include <thread>
 #include <future>
 #include <atomic>
+#include <condition_variable>
 
 //std 사용
 using namespace std;

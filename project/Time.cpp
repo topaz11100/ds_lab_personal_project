@@ -1,24 +1,19 @@
 #include "Time.h"
 
-atomic<bool> second_condition = false;
+mutex cv_mtx;
+condition_variable cv;
 
-atomic<bool> alert = false;
-
-atomic<bool> reminder = false;
-
-vector<int> over_set;
-
-mutex refri_mtx;
-mutex over_set_mtx;
-
-const int reminder_time = 5;
+bool second_condition = false;
+bool alert = false;
+bool reminder = false;
 
 void flow_clock()
 {
 	while (true)
 	{
 		this_thread::sleep_for(chrono::seconds(1));
-		second_condition.store(true);
+		second_condition = true;
+		cv.notify_all();
 	}
 }
 
@@ -26,40 +21,23 @@ void second_work(refrigerator& r)
 {
 	while (true)
 	{
-		if (second_condition.load())
-		{
-			bool alert_con = false, remin_con = false;
-			{
-				lock_guard<mutex> lock1(refri_mtx);
-				lock_guard<mutex> lock2(over_set_mtx);
+		unique_lock<std::mutex> lock(cv_mtx);
+		cv.wait(lock, [] { return second_condition; });
 
-				r.minus_expiry();
+		r.minus_expiry();
 
-				r.over_expiry(over_set);
-				alert_con = over_set.size() > 0;
+		alert = !r.is_alert_empty();
+		reminder = !r.is_remin_empty();
 
-				//remin_con = r.get_length() != 0 && r[0].get_expiry() == reminder_time;
-			}
-			if (alert_con)
-			{
-				alert.store(true);
-			}
-			//if (remin_con)
-			{
-				//reminder.store(true);
-			}
-			second_condition.store(false);
-		}
+		second_condition = false;
+		cv.notify_all();
 	}
 }
 
-void print_over_expiry_alert(refrigerator& r, int temp)
+void print_over_expiry_alert(refrigerator& r)
 {
 	cerr << "유통기한 지남!!!\n폐기한 음식\n";
-	for (int i = 0; i < temp; i += 1)
-	{
-		cerr << r.pop(0) << "\n";
-	}
+	cerr << r.pop_alert_set() << "\n";
 	cerr << "위 음식 처리 완료" << endl;
 }
 
@@ -67,30 +45,19 @@ void alert_work(refrigerator& r)
 {
 	while (true)
 	{
-		if (alert.load())
-		{
-			int temp;
-			{
-				lock_guard<mutex> lock(over_set_mtx);
-				temp = over_set.size();
-			}
-			{
-				lock_guard<mutex> lock(refri_mtx);
-				print_over_expiry_alert(r, temp);
-			}
-		}
-		alert.store(false);
+		unique_lock<std::mutex> lock(cv_mtx);
+		cv.wait(lock, [] { return alert; });
+
+		print_over_expiry_alert(r);
+		
+		alert = false;
 	}
 }
-
-//한번만 알리고 끝내게 고치기
-
-/*
 
 void print_expiry_reminder(refrigerator& r)
 {
 	cerr << "유통기한 임박\n음식 정보\n";
-	cerr << r[0] << "\n";
+	cerr << r.pop_remin_set() << "\n";
 	cerr << "레시피를 참조하여 좋은 음식을 만들어보세요\n";
 }
 
@@ -98,14 +65,12 @@ void reminder_work(refrigerator& r)
 {
 	while (true)
 	{
-		if (reminder.load())
-		{
-			{
-				lock_guard<mutex> lock(refri_mtx);
-				print_expiry_reminder(r);
-			}
-		}
-		reminder.store(false);
+		unique_lock<std::mutex> lock(cv_mtx);
+		cv.wait(lock, [] { return reminder; });
+
+		print_expiry_reminder(r);
+
+		reminder = false;
 	}
-}*/
+}
 

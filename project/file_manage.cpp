@@ -1,10 +1,11 @@
 #include "file_manage.h"
 
-void save_path_ls(vector<string> p, string path)
+void save_path_ls(vector<string>& p, const string& path)
 {
+	p.clear();
 	for (const auto& entry : filesystem::directory_iterator(path))
 	{
-		p.push_back(entry.path().string());
+		p.push_back(entry.path().filename().string());
 	}
 }
 
@@ -18,7 +19,7 @@ string recommend_recipe(const string& key)
 	
 	advance(fp, fd);
 
-	return get_recipe(key, fp->path().filename().string());
+	return get_recipe(key, fp->path().stem().string());
 }
 
 string get_recipe(const string& key1, const string& key2)
@@ -39,16 +40,13 @@ string get_recipe(const string& key1, const string& key2)
 	return result;
 }
 
-void set_recipe_use_cin()
+void set_recipe_use_cin(const string& food, const string& reci)
 {
-	vector<string> input_temp;
-	cout << "주재료, 레시피 이름 입력\n(주재료 이름) (레시피 이름)\n";
-	input_to_vector(cin, input_temp);
 
-	filesystem::path p = recipe_path + input_temp[0];
+	filesystem::path p = recipe_path + food;
 	filesystem::create_directories(p);
 
-	ofstream ofs{ recipe_path + input_temp[0] + "/" + input_temp[1] + recipe_extension};
+	ofstream ofs{ recipe_path + food + "/" + reci + recipe_extension};
 	if (!ofs.is_open())
 	{
 		throw runtime_error("recipe file open error");
@@ -83,18 +81,18 @@ food get_food(const string& key)
 	return result;
 }
 
-void set_food_use_cin()
+void set_food_use_cin(const string& key)
 {
 	vector<string> input_temp;
-	cout << "음식 입력\n(음식 이름) (기한)\n";
+	cout << key << "의 기한 입력 : ";
 	input_to_vector(cin, input_temp);
-	food f{ input_temp[0], stoi(input_temp[1]) };
-	set_food(f, f.get_name());
+	food f{ key, stoi(input_temp[0]) };
+	set_food(f);
 }
 
-void set_food(const food& f, const string& key)
+void set_food(const food& f)
 {
-	ofstream ofs{ food_path + key + food_extension, ios::binary };
+	ofstream ofs{ food_path + f.get_name() + food_extension, ios::binary};
 	if (!ofs.is_open())
 	{
 		throw runtime_error("food file open error");

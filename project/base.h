@@ -8,20 +8,14 @@
 //파일시스템
 #include <filesystem>
 
-//C호환 함수, 편의성 함수
-#include <utility>
+//예외
 #include <stdexcept>
-#include <cassert>
-#include <cmath>
-#include <random>
 
 //STL
 #include <algorithm>
 #include <string>
 #include <vector>
 #include <set>
-#include <map>
-#include <unordered_map>
 #include <queue>
 
 //메모리 관리
@@ -33,9 +27,10 @@
 
 //멀티스레드
 #include <thread>
-#include <future>
-#include <atomic>
 #include <condition_variable>
+
+//c 호환
+#include <cstdlib>
 
 //std 사용
 using namespace std;

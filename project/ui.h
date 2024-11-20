@@ -39,7 +39,3 @@ void save_recipe();
 void print_5_food(refrigerator& r);
 
 void program_off();
-
-void print_food_list();
-
-string print_recipe_list();

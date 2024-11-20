@@ -1,25 +1,59 @@
 #include "file_manage.h"
 
+void create_recipe_dir(const string& food_name)
+{
+	filesystem::path p = recipe_path + food_name;
+	filesystem::create_directories(p);
+}
+
 void save_path_ls(vector<string>& p, const string& path)
 {
 	p.clear();
 	for (const auto& entry : filesystem::directory_iterator(path))
 	{
-		p.push_back(entry.path().filename().string());
+		p.push_back(entry.path().stem().string());
 	}
 }
 
-string recommend_recipe(const string& key)
+food get_food(const string& key)
 {
-	filesystem::path p = recipe_path + key;
-	if (!filesystem::exists(p)) return "No Recipe";
+	ifstream ifs{ food_path + key + food_extension, ios::binary };
+	if (!ifs.is_open())
+	{
+		throw runtime_error("food file open error");
+	}
+	int expiry, name_length;
+	ifs.read(reinterpret_cast<char*>(&expiry), sizeof(int));
+	ifs.read(reinterpret_cast<char*>(&name_length), sizeof(int));
+	string name(name_length, '\0');
+	ifs.read(reinterpret_cast<char*>(&name[0]), name_length);
+	food result{ name, expiry };
+	cout << endl << name << " loaded" << endl << endl;
+	return result;
+}
 
-	auto fp = filesystem::directory_iterator(p);
-	int fd = rand() % distance(fp, filesystem::directory_iterator{});
-	
-	advance(fp, fd);
+void set_food_use_cin(const string& key)
+{
+	vector<string> input_temp;
+	cout << key << "의 기한 입력 : ";
+	input_to_vector(cin, input_temp);
+	food f{ key, stoi(input_temp[0]) };
+	set_food(f);
+	create_recipe_dir(key);
+}
 
-	return get_recipe(key, fp->path().stem().string());
+void set_food(const food& f)
+{
+	ofstream ofs{ food_path + f.get_name() + food_extension, ios::binary };
+	if (!ofs.is_open())
+	{
+		throw runtime_error("food file open error");
+	}
+	food_bin fb{ food_to_bin(f) };
+	ofs.write(reinterpret_cast<const char*>(&fb.expiry), sizeof(int));
+	ofs.write(reinterpret_cast<const char*>(&fb.name_length), sizeof(int));
+	ofs.write(reinterpret_cast<const char*>(fb.name.c_str()), fb.name_length);
+	cout << endl << f.get_name() << food_extension << " saved" << endl << endl;
 }
 
 string get_recipe(const string& key1, const string& key2)
@@ -42,10 +76,6 @@ string get_recipe(const string& key1, const string& key2)
 
 void set_recipe_use_cin(const string& food, const string& reci)
 {
-
-	filesystem::path p = recipe_path + food;
-	filesystem::create_directories(p);
-
 	ofstream ofs{ recipe_path + food + "/" + reci + recipe_extension};
 	if (!ofs.is_open())
 	{
@@ -64,43 +94,16 @@ void set_recipe_use_cin(const string& food, const string& reci)
 	}
 }
 
-food get_food(const string& key)
+string recommend_recipe(const string& key)
 {
-	ifstream ifs{ food_path + key + food_extension, ios::binary };
-	if (!ifs.is_open())
-	{
-		throw runtime_error("food file open error");
-	}
-	int expiry, name_length;
-	ifs.read(reinterpret_cast<char*>(&expiry), sizeof(int));
-	ifs.read(reinterpret_cast<char*>(&name_length), sizeof(int));
-	string name(name_length, '\0');
-	ifs.read(reinterpret_cast<char*>(&name[0]), name_length);
-	food result{ name, expiry };
-	cout << endl << name <<  " loaded" << endl << endl;
-	return result;
-}
+	filesystem::path p = recipe_path + key;
+	if (!filesystem::exists(p)) return "No Recipe";
 
-void set_food_use_cin(const string& key)
-{
-	vector<string> input_temp;
-	cout << key << "의 기한 입력 : ";
-	input_to_vector(cin, input_temp);
-	food f{ key, stoi(input_temp[0]) };
-	set_food(f);
-}
+	auto fp = filesystem::directory_iterator(p);
+	int fd = rand() % distance(fp, filesystem::directory_iterator{});
 
-void set_food(const food& f)
-{
-	ofstream ofs{ food_path + f.get_name() + food_extension, ios::binary};
-	if (!ofs.is_open())
-	{
-		throw runtime_error("food file open error");
-	}
-	food_bin fb{ food_to_bin(f) };
-	ofs.write(reinterpret_cast<const char*>(&fb.expiry), sizeof(int));
-	ofs.write(reinterpret_cast<const char*>(&fb.name_length), sizeof(int));
-	ofs.write(reinterpret_cast<const char*>(fb.name.c_str()), fb.name_length);
-	cout << endl << f.get_name() << food_extension << " saved" << endl << endl;
+	advance(fp, fd);
+
+	return get_recipe(key, fp->path().stem().string());
 }
 

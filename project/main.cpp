@@ -2,7 +2,6 @@
 
 int main() {
 	
-	
 	refrigerator r;
 
 	thread clock_t{ flow_clock };
@@ -59,9 +58,6 @@ int main() {
 	second_work_t.join();
 	reminder_work_t.join();
 	alert_work_t.join();
-	
-
-
 
 	return 0;
 }

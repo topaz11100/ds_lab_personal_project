@@ -43,32 +43,6 @@ void print_food_list()
 	}
 }
 
-string print_recipe_list()
-{
-	string result;
-
-	vector<string> input;
-	save_path_ls(input, recipe_path);
-	cout << "\n레시피가 등록된 음식 목록\n";
-	for (auto& f : input)
-	{
-		cout << f << '\n';
-	}
-
-	cout << "레시피를 볼 재료를 선택하세요\n재료 이름 입력 : ";
-	input_to_vector(cin, input);
-	cout << "\n" << input[0] << " 레시피 목록\n";
-	result = input[0];
-
-	save_path_ls(input, recipe_path + input[0]);
-	for (auto& f : input)
-	{
-		cout << f << '\n';
-	}
-
-	return result;
-}
-
 void print_all_food(refrigerator& r)
 {
 	r.print();
@@ -109,27 +83,45 @@ void save_food()
 	set_food_use_cin(food_name[0]);
 }
 
+string print_recipe_list()
+{
+	string food_name;
+
+	vector<string> input;
+	print_food_list();
+	cout << "레시피 목록을 보고 싶은 음식 입력\n이름 입력 : ";
+	input_to_vector(cin, input);
+	food_name = input[0];
+	
+	cout << food_name << " 의 레시피 목록\n";
+	save_path_ls(input, recipe_path + input[0]);
+	for (auto& f : input)
+	{
+		cout << f << '\n';
+	}
+	return food_name;
+}
+
 void print_recipe()
 {
-	string food = print_recipe_list();
+	string food_name = print_recipe_list();
 	
-	cout << "볼 레시피를 선택하세요\n이름 입력 : ";
+	cout << "볼 레시피를 선택\n이름 입력 : ";
 	vector<string> input;
 	input_to_vector(cin, input);
 
-	cout << get_recipe(food, input[0]) << endl;
+	cout << get_recipe(food_name, input[0]) << endl;
 }
 
 void save_recipe()
 {
-	string food = print_recipe_list();
+	string food_name = print_recipe_list();
 
-	cout << "새 이름으로 생성, 기존 이름으로 수정\n";
-	cout << "레시피 이름 입력 : ";
-	vector<string> recipe_name;
-	input_to_vector(cin, recipe_name);
+	cout << "설정할 레시피 입력\n이름 입력 : ";
+	vector<string> input;
+	input_to_vector(cin, input);
 
-	set_recipe_use_cin(food, recipe_name[0]);
+	set_recipe_use_cin(food_name, input[0]);
 }
 
 void print_5_food(refrigerator& r)

@@ -18,13 +18,20 @@ food refrigerator::pop(const string& name)
 {
 	lock_guard<mutex> lock(mtx);
 
-	for (auto& f : expiry_set)
+	auto f = expiry_set.begin();
+
+	for (;f != expiry_set.end(); ++f)
 	{
-		if (f.get_name() == name)
+		if (f->get_name() == name)
 		{
-			return f;
+			food result{ *f };
+			expiry_set.erase(f);
+
+			return result;
 		}
 	}
+
+	throw out_of_range{ "no food" };
 }
 
 food refrigerator::pop(int index)
@@ -77,7 +84,7 @@ void refrigerator::print()
 {
 	lock_guard<mutex> lock(mtx);
 
-	cout << "냉장고 상태\n";
+	cout << "\n냉장고 상태\n";
 	cout << length() << " 개 음식이 있습니다\n";
 	for (auto& f : expiry_set)
 	{

@@ -40,7 +40,7 @@ void second_work(refrigerator& r)
 
 void print_over_expiry_alert(refrigerator& r)
 {
-	cerr << "\n유통기한 지남!!!\n폐기한 음식\n";
+	cerr << "\n\n유통기한 지남!!!\n폐기한 음식\n";
 	cerr << r.pop_alert_set() << "\n";
 	cerr << "위 음식 처리 완료" << endl;
 }
@@ -62,7 +62,7 @@ void alert_work(refrigerator& r)
 
 void print_expiry_reminder(refrigerator& r)
 {
-	cerr << "\n유통기한 임박\n음식 정보\n";
+	cerr << "\n\n유통기한 임박\n음식 정보\n";
 	cerr << r.pop_remin_set() << "\n";
 	cerr << "레시피를 참조하여 좋은 음식을 만들어보세요\n";
 }

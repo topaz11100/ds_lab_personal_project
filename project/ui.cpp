@@ -66,7 +66,14 @@ void pop_food(refrigerator& r)
 	vector<string> food_name;
 	input_to_vector(cin, food_name);
 
-	r.pop(food_name[0]);
+	try
+	{
+		r.pop(food_name[0]);
+	}
+	catch (out_of_range& e)
+	{
+		cout << e.what() << endl;
+	}
 
 	cout << "추천 레시피\n";
 	cout << recommend_recipe(food_name[0]);
@@ -110,7 +117,7 @@ void print_recipe()
 	vector<string> input;
 	input_to_vector(cin, input);
 
-	cout << get_recipe(food_name, input[0]) << endl;
+	cout << endl << get_recipe(food_name, input[0]) << endl;
 }
 
 void save_recipe()
@@ -127,7 +134,7 @@ void save_recipe()
 void print_5_food(refrigerator& r)
 {
 	int thre = min(5, r.length());
-	cout << "기한이 얼마 남지 않은 음식\n";
+	cout << "\n기한이 얼마 남지 않은 음식\n";
 	for (int i = 0; i < thre; i += 1)
 	{
 		cout << r[i] << '\n';

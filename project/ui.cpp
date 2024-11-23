@@ -87,6 +87,7 @@ void save_food()
 	vector<string> food_name;
 	input_to_vector(cin, food_name);
 
+	cout << endl;
 	set_food_use_cin(food_name[0]);
 }
 
@@ -100,7 +101,7 @@ string print_recipe_list()
 	input_to_vector(cin, input);
 	food_name = input[0];
 	
-	cout << food_name << " 의 레시피 목록\n";
+	cout << '\n' << food_name << " 의 레시피 목록\n";
 	save_path_ls(input, recipe_path + input[0]);
 	for (auto& f : input)
 	{
